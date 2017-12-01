@@ -1,0 +1,90 @@
+<!-- 
+Created by 501 commons and modeled after VolunteerSignupFS managed page. 
+This custom version also references the Volunteers for Salesforce managed Contact Fieldset.
+-->  
+ 
+<apex:page controller="GW_Volunteers.VOL_CTRL_VolunteersSignupFS" extensions="C501_VOL_CTRL_VolunteersSignupFS" language="{!strLanguage}" showheader="false" sidebar="false" standardStylesheets="false" cache="false">
+
+    <apex:stylesheet value="{!strURLtoCSSFile}" /> 
+
+    <apex:form id="frm" styleClass="cssForm" >
+    
+        <br/>
+        <table class="cssTable" columns="1" width="750px" >
+            <tr class="cssTableRow">
+                <td class="cssSectionLabelsColumn">
+                    <apex:outputText value="Personal Information Section">
+                    </apex:outputText>
+                    <hr/>
+                </td>
+            </tr>
+        </table>
+        <br/>
+        
+        <table class="cssTable" columns="3" >
+            <!-- first we specify the fields we require for Contact matching -->
+            <tr class="cssTableRow">
+                <td class="cssLabelsColumn" ><apex:outputLabel value="{!$ObjectType.Contact.Fields.FirstName.Label + '*'}" for="txtFirstName" /></td>
+                <td class="cssLabelsColumn" ><apex:outputLabel value="{!$ObjectType.Contact.Fields.LastName.Label + '*'}" for="txtLastName" /></td>
+                <td class="cssLabelsColumn" ><apex:outputLabel value="{!$ObjectType.Contact.Fields.Email.Label + '*'}" for="txtEmail" /></td>
+            </tr>
+            <tr class="cssTableRow">
+                <td class="cssInputFieldsColumn" ><apex:inputField value="{!contact.FirstName}" id="txtFirstName" required="true" styleClass="cssInputFields" /></td>
+                <td class="cssInputFieldsColumn" ><apex:inputField value="{!contact.LastName}" id="txtLastName" required="true" styleClass="cssInputFields" /></td>
+                <td class="cssInputFieldsColumn" ><apex:inputField value="{!contact.Email}" id="txtEmail" required="true" styleClass="cssInputFields" /></td>
+            </tr>
+        </table>
+                    
+        <table class="cssTable" columns="1" >
+            
+            <!--  now add optional fields the user can specify -->
+            <apex:repeat value="{!$ObjectType.Contact.FieldSets.GW_Volunteers__VolunteersSignupFS}" var="f" >
+
+                <tr class="cssTableRow">
+                    <apex:outputText value="{!IF(CONTAINS(f.Label, 'Section'), '<td class=\"cssSectionLabelsColumn\" >', '<td class=\"cssLabelsColumn\" >')}" escape="false" />
+                        <apex:outputLabel value="{!f.Label + IF(OR(f.DBRequired, f.Required), '*', '')}" />
+                        <apex:outputText value="{!IF(CONTAINS(f.Label, 'Section'), '<hr/>', '')}" escape="false" />
+                    <apex:outputText value="</td>" escape="false" />
+                </tr>
+                    
+                <tr class="cssTableRow">
+                    <apex:outputText value="{!IF(CONTAINS(f.Label, 'Section'), '<td class=\"cssSectionLabelsHelpTextColumn\" >', '<td class=\"cssLabelsHelpTextColumn\" >')}" escape="false" />
+                        <apex:outputLabel value="{!$ObjectType.Contact.fields[f].inlineHelpText}" />
+                    <apex:outputText value="</td>" escape="false" />
+                </tr>
+                
+                <tr class="cssTableRow">
+                    <apex:outputText value="{!IF(CONTAINS(f.Label, 'Section'), '<td style=\"display:none\">', '<td class=\"cssInputFieldsColumn\" >')}" escape="false" />
+                        <apex:inputField value="{!Contact[f]}" required="{!IF(OR(f.DBRequired, f.Required), 'true', 'false')}"
+                        styleClass="{!IF(f.Type == 'Long Text Area', 'cssInputFields cssTextArea', 'cssInputFields')}" />
+                    <apex:outputText value="</td>" escape="false" />
+                </tr>
+                
+            </apex:repeat>        
+        </table>
+                
+        <table class="cssTable" columns="1" >
+            <!-- add optional File Upload -->
+            <tr class="cssTableRow">            
+                <td class="cssLabelsColumn" ><apex:outputLabel value="{!strFileUploadLabel}" for="txtFileUpload" /></td>
+            </tr>
+            <tr>            
+                <td class="cssInputFieldsColumn" ><apex:inputFile styleClass="cssInputFields" rendered="{!strFileUploadLabel!=null}" value="{!attachment.body}" filename="{!attachment.name}" id="txtFileUpload" /></td>
+            </tr>
+
+            <tr class="cssTableRow">
+                <td class="cssInputFieldsColumn" >
+                    <apex:commandButton value="{!$Label.gw_volunteers__labelsubmitbutton}" id="btnSave" 
+                        onclick="document.getElementById('{!$Component.btnSave}').disabled=true;DoSave();"  />
+                    <apex:actionFunction name="DoSave" action="{!SaveExtension}"/>         
+                </td>
+            </tr>   
+            <tr class="cssTableRow">
+                <td class="cssInputFieldsColumn" ><apex:outputLabel value="{!StrSaveResult}" /></td>
+            </tr>   
+        </table>
+        
+        <apex:messages style="color:red;" />  
+    </apex:form>
+
+</apex:page>

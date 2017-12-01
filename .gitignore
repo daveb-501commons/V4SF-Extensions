@@ -1,0 +1,11 @@
+.project
+.settings
+salesforce.schema
+Referenced Packages
+/config/
+/apex-scripts/
+
+.sfdx/tools/apex.db
+.sfdx/orgs/
+.sfdx/sfdx-config.json
+.vscode/settings.json
