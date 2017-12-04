@@ -54,7 +54,7 @@ This custom version also references the Volunteers for Salesforce managed Contac
                 </tr>
                 
                 <tr class="cssTableRow">
-                    <apex:outputText value="{!IF(CONTAINS(f.Label, 'Section'), '', '<td class=\"cssInputFieldsColumn\" >')}" escape="false" />
+                    <apex:outputText value="{!IF(CONTAINS(f.Label, 'Section'), '<td style=\"display:none\">', '<td class=\"cssInputFieldsColumn\" >')}" escape="false" />
                         <apex:inputField value="{!Contact[f]}" required="{!IF(OR(f.DBRequired, f.Required), 'true', 'false')}"
                         styleClass="{!IF(f.Type == 'Long Text Area', 'cssInputFields cssTextArea', 'cssInputFields')}" />
                     <apex:outputText value="</td>" escape="false" />
@@ -76,7 +76,14 @@ This custom version also references the Volunteers for Salesforce managed Contac
                 <td class="cssInputFieldsColumn" >
                     <apex:commandButton value="{!$Label.gw_volunteers__labelsubmitbutton}" id="btnSave" 
                         onclick="document.getElementById('{!$Component.btnSave}').disabled=true;DoSave();"  />
-                    <apex:actionFunction name="DoSave" action="{!SaveExtension}"/>         
+                    <apex:actionFunction name="DoSave" action="{!SaveExtension}"/>  
+                    <apex:outputPanel id="redirectPanel" >
+                        <apex:outputText rendered="{!shouldRedirect}">
+                            <script type="text/javascript">
+                                window.top.location.href = '{!redirectUrl}';
+                            </script>
+                        </apex:outputText>
+                    </apex:outputPanel>
                 </td>
             </tr>   
             <tr class="cssTableRow">

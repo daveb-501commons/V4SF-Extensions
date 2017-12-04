@@ -3,6 +3,7 @@
   <types>
     <name>ApexClass</name>
     <members>C501_VOL_CTRL_VolunteersSignupFS</members>
+    <members>C501_VOL_CTRL_VolunteersSignupFSTests</members>
   </types>
   <types>
     <name>ApexPage</name>
